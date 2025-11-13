@@ -5,13 +5,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.cursor
+import com.varabyte.kobweb.compose.css.fontWeight
+import com.varabyte.kobweb.compose.css.textAlign
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.background
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
-import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.styleModifier
@@ -19,13 +24,11 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.css.fontSize
-import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.marginBottom
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.rgba
-import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.HTMLElement
@@ -65,11 +68,11 @@ fun InteractivePieChart(
             attrs = {
                 style {
                     fontSize(20.px)
-                    property("font-weight", "bold")
+                    fontWeight(FontWeight.Bold)
                     marginBottom(15.px)
-                    property("text-align", "center")
+                    textAlign(TextAlign.Center)
                     color(Color("#2c3e50"))
-                    property("cursor", if (hidden) "pointer" else "default")
+                    cursor(if (hidden) Cursor.Pointer else Cursor.Default)
                 }
                 if (hidden) {
                     onClick { isRevealed = !isRevealed }
@@ -113,55 +116,37 @@ fun InteractivePieChart(
                     Modifier
                         .width(250.px)
                         .height(250.px)
-                        .borderRadius(50.percent)
                         .styleModifier {
                             property("margin", "0 auto")
                             property("position", "relative")
-                            property("background", backgroundValue)
-                            property("transition", "opacity 0.3s ease")
-                            property("cursor", "pointer")
                         }.toAttrs(),
             ) {
-                // Center circle for better visuals
+                // The pie chart itself
                 Div(
                     attrs =
                         Modifier
-                            .width(80.px)
-                            .height(80.px)
+                            .width(250.px)
+                            .height(250.px)
                             .borderRadius(50.percent)
-                            .background(Color("#ffffff"))
                             .styleModifier {
-                                property("position", "absolute")
-                                property("top", "50%")
-                                property("left", "50%")
-                                property("transform", "translate(-50%, -50%)")
-                                property("display", "flex")
-                                property("align-items", "center")
-                                property("justify-content", "center")
-                                property("font-size", "32px")
+                                property("background", backgroundValue)
+                                property("transition", "all 0.3s ease")
                             }.toAttrs(),
-                ) {
-                    Text("🎵")
-                }
-            }
+                ) {}
 
-            Div(
-                attrs =
-                    Modifier
-                        .margin(top = 20.px)
-                        .styleModifier {
-                            property("display", "flex")
-                            property("flex-direction", "column")
-                            property("gap", "8px")
-                        }.toAttrs(),
-            ) {
+                // Hover zones for each slice with tooltips
+                currentAngle = 0.0
                 data.forEachIndexed { index, (label, value) ->
-                    InteractiveLegendItem(
+                    val percentage = (value / total) * 100
+                    val startAngle = currentAngle
+                    currentAngle += (percentage * 3.6)
+
+                    PieSliceWithTooltip(
                         label = label,
-                        value = value,
-                        total = total,
+                        percentage = percentage,
+                        startAngle = startAngle,
                         color = colors.getOrElse(index) { "#cccccc" },
-                        isSelected = selectedIndex == index,
+                        isHovered = selectedIndex == index,
                         onHover = { selectedIndex = index },
                         onLeave = { selectedIndex = null },
                     )
@@ -184,54 +169,92 @@ fun InteractivePieChart(
 }
 
 @Composable
-private fun InteractiveLegendItem(
+private fun PieSliceWithTooltip(
     label: String,
-    value: Double,
-    total: Double,
+    percentage: Double,
+    startAngle: Double,
     color: String,
-    isSelected: Boolean,
+    isHovered: Boolean,
     onHover: () -> Unit,
     onLeave: () -> Unit,
 ) {
+    val endAngle = startAngle + (percentage * 3.6)
+
+    // Calculate the middle angle for tooltip positioning
+    val midAngle = startAngle + (percentage * 3.6 / 2)
+    val rad = kotlin.math.PI * (midAngle - 90) / 180.0
+
+    // Position tooltip at 70% of the radius from center
+    val tooltipDistance = 35.0 // 70% of 50% radius
+    val tooltipX = 50.0 + tooltipDistance * kotlin.math.cos(rad)
+    val tooltipY = 50.0 + tooltipDistance * kotlin.math.sin(rad)
+
+    // Hover zone
     Div(
-        attrs = {
-            style {
-                property("display", "flex")
-                property("align-items", "center")
-                property("gap", "10px")
-                property("cursor", "pointer")
-                property("transition", "all 0.3s ease")
-                property("transform", if (isSelected) "scale(1.05)" else "scale(1)")
-                property("font-weight", if (isSelected) "bold" else "normal")
-            }
-            onMouseEnter { onHover() }
-            onMouseLeave { onLeave() }
-        },
-    ) {
+        attrs =
+            Modifier
+                .width(250.px)
+                .height(250.px)
+                .styleModifier {
+                    property("position", "absolute")
+                    property("top", "0")
+                    property("left", "0")
+                    property("cursor", "pointer")
+                    property("clip-path", buildClipPath(startAngle, endAngle))
+                }.toAttrs {
+                    onMouseEnter { onHover() }
+                    onMouseLeave { onLeave() }
+                },
+    ) {}
+
+    // Tooltip
+    if (isHovered) {
         Div(
-            attrs = {
-                style {
-                    width(20.px)
-                    height(20.px)
-                    property("border-radius", "3px")
-                    property("background", color)
-                    property("transition", "transform 0.3s ease")
-                    property("transform", if (isSelected) "scale(1.3)" else "scale(1)")
-                }
-            },
-        ) {}
-        Div(
-            attrs = {
-                style {
-                    fontSize(14.px)
-                    color(Color("#555555"))
-                }
-            },
+            attrs =
+                Modifier
+                    .styleModifier {
+                        property("position", "absolute")
+                        property("left", "$tooltipX%")
+                        property("top", "$tooltipY%")
+                        property("transform", "translate(-50%, -50%)")
+                        property("background", "rgba(44, 62, 80, 0.95)")
+                        property("color", "#ffffff")
+                        property("padding", "8px 12px")
+                        property("border-radius", "6px")
+                        property("font-size", "13px")
+                        property("font-weight", "bold")
+                        property("white-space", "nowrap")
+                        property("pointer-events", "none")
+                        property("z-index", "100")
+                        property("box-shadow", "0 2px 8px rgba(0,0,0,0.3)")
+                        property("animation", "fadeIn 0.2s ease-in")
+                    }.toAttrs(),
         ) {
-            val percentage = ((value / total) * 1000).toInt() / 10.0
-            Text("$label: $percentage%")
+            Text("$label\n${percentage.toInt()}%")
         }
     }
+}
+
+private fun buildClipPath(
+    startAngle: Double,
+    endAngle: Double,
+): String {
+    val centerX = 50.0
+    val centerY = 50.0
+    val radius = 50.0
+
+    val points = mutableListOf("$centerX% $centerY%")
+
+    val steps = maxOf(2, ((endAngle - startAngle) / 5).toInt())
+    for (i in 0..steps) {
+        val angle = startAngle + ((endAngle - startAngle) * i / steps)
+        val rad = kotlin.math.PI * (angle - 90) / 180.0
+        val x = centerX + radius * kotlin.math.cos(rad)
+        val y = centerY + radius * kotlin.math.sin(rad)
+        points.add("$x% $y%")
+    }
+
+    return "polygon(${points.joinToString(", ")})"
 }
 
 private fun hexToRgb(hex: String): String {
