@@ -33,6 +33,17 @@ import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.HTMLElement
 
+private val activityColorMap =
+    mapOf(
+        "Relaxing" to "#FF6B6B",
+        "Eating" to "#4ECDC4",
+        "Hanging" to "#FFE66D",
+        "Playing with Plants" to "#95E1D3",
+        "Brachiation" to "#A8E6CF",
+        "Walking" to "#FF8B94",
+        "Climbing" to "#C7CEEA",
+    )
+
 @Composable
 fun InteractivePieChart(
     title: String,
@@ -42,7 +53,12 @@ fun InteractivePieChart(
 ) {
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
     var isRevealed by remember { mutableStateOf(!hidden) }
-    val colors = remember(data.size) { generateDistinctColors(data.size) }
+    val colors =
+        remember(data) {
+            data.map { (label, _) ->
+                activityColorMap[label] ?: generateFallbackColor(label)
+            }
+        }
 
     Div(
         attrs =
@@ -266,47 +282,37 @@ private fun hexToRgb(hex: String): String {
     return "$r, $g, $b"
 }
 
-private fun generateDistinctColors(count: Int): List<String> {
-    if (count == 0) return emptyList()
-    
-    // Use HSL color space to generate visually distinct colors
-    // Distribute hues evenly around the color wheel
-    val colors = mutableListOf<String>()
-    val goldenRatioConjugate = 0.618033988749895
-    var hue = kotlin.random.Random.nextDouble() // Start with random hue
-    
-    for (i in 0 until count) {
-        // Use golden ratio to space colors apart
-        hue += goldenRatioConjugate
-        hue %= 1.0
-        
-        // Vary saturation and lightness slightly for additional distinction
-        val saturation = 0.65 + (i % 3) * 0.1 // 65%, 75%, 85%
-        val lightness = 0.5 + (i % 2) * 0.1 // 50%, 60%
-        
-        colors.add(hslToHex(hue, saturation, lightness))
-    }
-    
-    return colors
+private fun generateFallbackColor(label: String): String {
+    // Generate a consistent color based on the label's hash
+    val hash = label.hashCode()
+    val hue = (hash % 360).toDouble() / 360.0
+    val saturation = 0.65 + ((hash / 360) % 3) * 0.1
+    val lightness = 0.5 + ((hash / 1080) % 2) * 0.1
+    return hslToHex(hue.coerceIn(0.0, 1.0), saturation, lightness)
 }
 
-private fun hslToHex(h: Double, s: Double, l: Double): String {
+private fun hslToHex(
+    h: Double,
+    s: Double,
+    l: Double,
+): String {
     val c = (1 - kotlin.math.abs(2 * l - 1)) * s
     val x = c * (1 - kotlin.math.abs(((h * 6) % 2) - 1))
     val m = l - c / 2
-    
-    val (r1, g1, b1) = when ((h * 6).toInt()) {
-        0 -> Triple(c, x, 0.0)
-        1 -> Triple(x, c, 0.0)
-        2 -> Triple(0.0, c, x)
-        3 -> Triple(0.0, x, c)
-        4 -> Triple(x, 0.0, c)
-        else -> Triple(c, 0.0, x)
-    }
-    
+
+    val (r1, g1, b1) =
+        when ((h * 6).toInt()) {
+            0 -> Triple(c, x, 0.0)
+            1 -> Triple(x, c, 0.0)
+            2 -> Triple(0.0, c, x)
+            3 -> Triple(0.0, x, c)
+            4 -> Triple(x, 0.0, c)
+            else -> Triple(c, 0.0, x)
+        }
+
     val r = ((r1 + m) * 255).toInt().coerceIn(0, 255)
     val g = ((g1 + m) * 255).toInt().coerceIn(0, 255)
     val b = ((b1 + m) * 255).toInt().coerceIn(0, 255)
-    
+
     return "#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}"
 }
