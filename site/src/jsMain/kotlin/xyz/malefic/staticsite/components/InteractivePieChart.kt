@@ -283,6 +283,7 @@ private fun hexToRgb(hex: String): String {
 }
 
 private fun generateFallbackColor(label: String): String {
+    console.log("Generating fallback color for label: $label")
     // Generate a consistent color based on the label's hash
     val hash = label.hashCode()
     val hue = (hash % 360).toDouble() / 360.0
