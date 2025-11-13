@@ -1,11 +1,31 @@
 package xyz.malefic.staticsite.components
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.modifiers.background
+import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.color
+import org.jetbrains.compose.web.css.fontSize
+import org.jetbrains.compose.web.css.height
+import org.jetbrains.compose.web.css.marginBottom
+import org.jetbrains.compose.web.css.padding
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.rgba
+import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
 import org.w3c.dom.HTMLElement
@@ -69,6 +89,25 @@ fun InteractivePieChart(
             val total = data.sumOf { it.second }
             var currentAngle = 0.0
 
+            // Build the conic-gradient string
+            val gradientStops =
+                buildList {
+                    data.forEachIndexed { index, (_, value) ->
+                        val percentage = (value / total) * 100
+                        val startAngle = currentAngle
+                        currentAngle += (percentage * 3.6)
+                        val endAngle = currentAngle
+                        val color = colors.getOrElse(index) { "#cccccc" }
+                        val opacity = if (selectedIndex == null || selectedIndex == index) "1" else "0.5"
+                        val rgbColor = hexToRgb(color)
+
+                        add("rgba($rgbColor, $opacity) ${startAngle}deg")
+                        add("rgba($rgbColor, $opacity) ${endAngle}deg")
+                    }
+                }.joinToString(", ")
+
+            val backgroundValue = "conic-gradient(from 0deg, $gradientStops)"
+
             Div(
                 attrs =
                     Modifier
@@ -78,19 +117,7 @@ fun InteractivePieChart(
                         .styleModifier {
                             property("margin", "0 auto")
                             property("position", "relative")
-                            property(
-                                "background",
-                                data
-                                    .mapIndexed { index, (_, value) ->
-                                        val percentage = (value / total) * 100
-                                        val startAngle = currentAngle
-                                        currentAngle += (percentage * 3.6)
-                                        val opacity = if (selectedIndex == null || selectedIndex == index) "1" else "0.5"
-                                        "conic-gradient(from ${startAngle}deg, rgba(${hexToRgb(
-                                            colors.getOrElse(index) { "#cccccc" },
-                                        )}, $opacity) 0deg ${percentage * 3.6}deg)"
-                                    }.joinToString(", "),
-                            )
+                            property("background", backgroundValue)
                             property("transition", "opacity 0.3s ease")
                             property("cursor", "pointer")
                         }.toAttrs(),
@@ -209,7 +236,7 @@ private fun InteractiveLegendItem(
 
 private fun hexToRgb(hex: String): String {
     val cleanHex = hex.removePrefix("#")
-    val r = cleanHex.substring(0, 2).toInt(16)
+    val r = cleanHex.take(2).toInt(16)
     val g = cleanHex.substring(2, 4).toInt(16)
     val b = cleanHex.substring(4, 6).toInt(16)
     return "$r, $g, $b"
