@@ -140,7 +140,7 @@ fun HomePage() {
             }
 
             AnimatedSection("fadeInRight", 0.4) {
-                CollapsibleSection("methodology", "Methodology", defaultExpanded = false) {
+                CollapsibleSection("methodology", "Methodology", defaultExpanded = true) {
                     MethodologyContent()
                 }
             }
