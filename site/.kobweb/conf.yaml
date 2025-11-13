@@ -1,5 +1,6 @@
 site:
   title: "Lar Gibbon Research Poster"
+  basePath: "LarGibbonResearchPoster"
 
 server:
   files:

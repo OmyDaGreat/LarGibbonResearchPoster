@@ -41,6 +41,7 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.graphics.Image
 import org.jetbrains.compose.web.css.AlignItems
+import org.jetbrains.compose.web.css.CSSKeywordValue
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.Color
@@ -120,9 +121,7 @@ fun HomePage() {
                     .maxWidth(1400.px)
                     .margin(
                         topBottom = 0.px,
-                        leftRight =
-                            org.jetbrains.compose.web.css
-                                .CSSKeywordValue("auto") as CSSSizeValue<CSSUnit.px>,
+                        leftRight = CSSKeywordValue("auto") as CSSSizeValue<CSSUnit.px>,
                     ).padding(40.px, 20.px),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
