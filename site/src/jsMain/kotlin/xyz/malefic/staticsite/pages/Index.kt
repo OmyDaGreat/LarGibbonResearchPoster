@@ -681,30 +681,14 @@ private fun ReferencesContent() {
                 .color(Color("#2c3e50"))
                 .toAttrs(),
     ) {
-        Li { Text("Geissmann, T. (2002). Duet-splitting and the evolution of gibbon songs. Biological Reviews, 77(1), 57-76.") }
         Li {
             Text(
-                "Koda, H., et al. (2013). Experimental evidence for vocal learning in a captive gibbon family. Primates, 54(3), 283-291.",
+                "White, K. 2019. Effects of captivity on the activity budgets of lar gibbons (Hylobates lar). Canopy 20(1), 43-45. (n.d.). Animal Welfare Institute. https://awionline.org/lab-animal-search/white-k-2019-effects-captivity-activity-budgets-lar-gibbons-hylobates-lar-canopy",
             )
         }
         Li {
             Text(
-                "Mitani, J. C. (1988). Male gibbon (Hylobates agilis) singing behavior: Natural history, song variations and function. Ethology, 79(3), 177-194.",
-            )
-        }
-        Li {
-            Text(
-                "Reichard, U. H. (2003). Social monogamy in gibbons: The male perspective. In Monogamy: Mating Strategies and Partnerships in Birds, Humans and Other Mammals (pp. 190-213).",
-            )
-        }
-        Li {
-            Text(
-                "Tan, C. L., et al. (2020). Vocal communication in white-handed gibbons: Implications for conservation. International Journal of Primatology, 41, 456-478.",
-            )
-        }
-        Li {
-            Text(
-                "Clarke, E., Reichard, U. H., & Zuberbühler, K. (2006). The syntax and meaning of wild gibbon songs. PLoS ONE, 1(1), e73.",
+                "Gronqvist, G., Kingston-Jones, M., May, A., & Lehmann, J. (2013). The effects of three types of environmental enrichment on the behaviour of captive Javan gibbons (Hylobates moloch). Applied Animal Behaviour Science, 147(1-2), 214–223. https://doi.org/10.1016/j.applanim.2013.04.021",
             )
         }
     }
