@@ -1,10 +1,16 @@
 package xyz.malefic.staticsite.pages
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.fontWeight
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.alignItems
 import com.varabyte.kobweb.compose.ui.modifiers.background
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
@@ -14,25 +20,37 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.id
+import com.varabyte.kobweb.compose.ui.modifiers.justifyContent
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.objectFit
+import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.textAlign
+import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
+import com.varabyte.kobweb.silk.components.graphics.Image
+import org.jetbrains.compose.web.css.AlignItems
+import org.jetbrains.compose.web.css.AnimationTimingFunction
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
+import org.jetbrains.compose.web.css.JustifyContent
+import org.jetbrains.compose.web.css.backgroundColor
 import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.css.fontSize
+import org.jetbrains.compose.web.css.lineHeight
 import org.jetbrains.compose.web.css.margin
 import org.jetbrains.compose.web.css.marginBottom
 import org.jetbrains.compose.web.css.marginTop
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.rgba
+import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.B
-import org.jetbrains.compose.web.dom.Br
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.H2
@@ -57,7 +75,7 @@ import xyz.malefic.staticsite.components.SideMenu
 fun HomePage() {
     Style {
         "body" style {
-            property("background-color", "#f0f4f8")
+            backgroundColor(Color("#f0f4f8"))
             property("margin", "0")
             property("padding", "0")
             property("font-family", "Arial, sans-serif")
@@ -120,7 +138,7 @@ fun HomePage() {
             }
 
             AnimatedSection(delay = 0.5) {
-                CollapsibleSection("images", "Study Subjects - Lar Gibbons at Metro Zoo") {
+                CollapsibleSection("images", "Images from the SA Zoo - Gibbons & Enclosure") {
                     GibbonImages()
                 }
             }
@@ -163,30 +181,28 @@ private fun Header() {
     Div(
         attrs =
             Modifier
+                .id("header")
                 .fillMaxWidth()
                 .padding(40.px, 20.px)
                 .background(Color("#2c3e50"))
                 .borderRadius(20.px)
                 .boxShadow(0.px, 8.px, 24.px, 0.px, rgba(0, 0, 0, 0.15))
-                .styleModifier {
-                    property("text-align", "center")
-                    property("animation", "pulse 2s infinite")
-                }.toAttrs {
-                    id("header")
-                },
+                .textAlign(TextAlign.Center)
+                .styleModifier { property("animation", "pulse 2s infinite") }
+                .toAttrs(),
     ) {
         H1(
             attrs = {
                 style {
                     color(Color("#ffffff"))
                     fontSize(48.px)
-                    property("font-weight", "bold")
+                    fontWeight(FontWeight.Bold)
                     margin(0.px)
                     marginBottom(10.px)
                 }
             },
         ) {
-            Text("Vocal Communication Patterns in Captive Lar Gibbons")
+            Text("White-Handed Gibbon Activity in Captivity")
         }
         H2(
             attrs = {
@@ -198,7 +214,7 @@ private fun Header() {
                 }
             },
         ) {
-            Text("A Behavioral Study at Metro Zoo")
+            Text("A Behavioral Study at Santa Ana Zoo")
         }
     }
 }
@@ -208,17 +224,15 @@ private fun Authors() {
     Div(
         attrs =
             Modifier
+                .id("authors")
                 .fillMaxWidth()
                 .padding(20.px)
                 .background(Color("#ffffff"))
                 .borderRadius(15.px)
                 .boxShadow(0.px, 4.px, 12.px, 0.px, rgba(0, 0, 0, 0.1))
                 .margin(top = 20.px)
-                .styleModifier {
-                    property("text-align", "center")
-                }.toAttrs {
-                    id("authors")
-                },
+                .textAlign(TextAlign.Center)
+                .toAttrs(),
     ) {
         H3(
             attrs = {
@@ -229,22 +243,7 @@ private fun Authors() {
                 }
             },
         ) {
-            Text("Dr. Sarah Johnson¹, Dr. Michael Chen², Dr. Emily Rodriguez³")
-        }
-        P(
-            attrs = {
-                style {
-                    fontSize(14.px)
-                    color(Color("#7f8c8d"))
-                    margin(5.px, 0.px)
-                }
-            },
-        ) {
-            Text("¹Department of Primatology, University of Wildlife Studies")
-            Br()
-            Text("²Metro Zoo Research Division")
-            Br()
-            Text("³Center for Animal Communication Research")
+            Text("Om Gupta, Esther Li, Alfredo Magallon, Cindy Nguyen")
         }
     }
 }
@@ -258,25 +257,21 @@ private fun IntroductionContent() {
             color(Color("#2c3e50"))
         }
     }) {
-        Text("Lar gibbons (")
-        I { Text("Hylobates lar") }
         Text(
-            ") are small apes known for their extraordinary vocal abilities and complex songs. This study examines the vocal communication patterns of a family group of lar gibbons housed at Metro Zoo over a six-month observation period. ",
-        )
-        Text(
-            "Understanding their vocal behavior in captivity provides insights into social dynamics, welfare indicators, and species-specific communication strategies.",
+            "White-handed gibbons in captivity, such as in zoos, will not have the same experiences and freedoms as their wild counterparts. While well-intentioned zoos attempt to bridge this gap, it often leads to different, even detrimental, behaviors in captive animals compared to in the wild. This first-semester capstone project will focus on how the activity budget of white-handed gibbons in captivity (SA ZOO) compares to that of those in the wild.",
         )
     }
     P(attrs = {
         style {
             fontSize(16.px)
-            property("line-height", "1.6")
+            lineHeight("1.6")
             color(Color("#2c3e50"))
             marginTop(15.px)
         }
     }) {
+        I { Text("Hypothesis: ") }
         Text(
-            "Our research focuses on three primary objectives: (1) documenting the frequency and types of vocalizations, (2) identifying patterns in daily calling behavior, and (3) correlating vocal activity with environmental and social factors.",
+            "White-handed gibbons in captivity will show less activity and less varied behavior than their wild counterparts.",
         )
     }
 }
@@ -286,48 +281,12 @@ private fun MethodologyContent() {
     P(attrs = {
         style {
             fontSize(16.px)
-            property("line-height", "1.6")
+            lineHeight("1.6")
             color(Color("#2c3e50"))
         }
     }) {
-        B { Text("Study Subjects: ") }
-        Text("Four lar gibbons (2 adults, 2 juveniles) were observed in their naturalistic enclosure at Metro Zoo.")
-    }
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-            marginTop(10.px)
-        }
-    }) {
-        B { Text("Observation Period: ") }
-        Text("Data collection occurred from January to June 2024, with daily observations conducted between 6:00 AM and 6:00 PM.")
-    }
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-            marginTop(10.px)
-        }
-    }) {
-        B { Text("Data Collection: ") }
         Text(
-            "Vocalizations were recorded using directional microphones and video equipment. Each call was classified by type, duration, and context. Environmental factors (temperature, visitor presence, feeding times) were also documented.",
-        )
-    }
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-            marginTop(10.px)
-        }
-    }) {
-        B { Text("Analysis: ") }
-        Text(
-            "Acoustic analysis was performed using Raven Pro software. Statistical analyses included frequency distributions, temporal patterns, and correlation analyses.",
+            "Before collecting data, the team conducted online research to understand and compare the typical wild behaviors and typical zoo behaviors of white-handed gibbons. Then, going to the Santa Ana Zoo to observe their two white-handed gibbons, the team conducted two types of observation: scan sampling and focal sampling. Two members chose scan sampling over one-minute intervals and two members chose focal sampling for one of the two white-handed gibbons. One observation was conducted in the morning after 11 a.m., the second in the afternoon after 1 p.m.",
         )
     }
 }
@@ -345,22 +304,27 @@ private fun GibbonImages() {
                     property("gap", "20px")
                 }.toAttrs(),
     ) {
-        ImageCard("Gibbon family group during morning calls")
-        ImageCard("Adult male performing territorial song")
-        ImageCard("Juvenile gibbon observing adult vocalizations")
-        ImageCard("Female gibbon in characteristic calling posture")
+        ImageCard("Dark-colored Gibbon (M1)", "/images/dark_gibbon.png")
+        ImageCard("Light-colord Gibbon (M2)", "/images/light_gibbon.png")
+        ImageCard("Enclosure Picture 1", "/images/enclosure1.png")
+        ImageCard("Enclosure Picture 2", "/images/enclosure2.png")
     }
 }
 
 @Composable
-private fun ImageCard(caption: String) {
+private fun ImageCard(
+    caption: String,
+    image: String,
+) {
     Div(
         attrs =
             Modifier
                 .borderRadius(10.px)
-                .styleModifier {
-                    property("overflow", "hidden")
-                    property("transition", "transform 0.3s ease")
+                .overflow(Overflow.Hidden)
+                .transition {
+                    property("transform")
+                    duration(0.3.s)
+                    timingFunction(AnimationTimingFunction.Ease)
                 }.boxShadow(0.px, 4.px, 12.px, 0.px, rgba(0, 0, 0, 0.1))
                 .background(Color("#ffffff"))
                 .toAttrs {
@@ -377,16 +341,23 @@ private fun ImageCard(caption: String) {
                 Modifier
                     .width(100.percent)
                     .height(200.px)
-                    .background(Color("#e0e0e0"))
-                    .styleModifier {
-                        property("display", "flex")
-                        property("align-items", "center")
-                        property("justify-content", "center")
-                        property("font-size", "64px")
-                        property("animation", "bounce 2s infinite")
-                    }.toAttrs(),
+                    .background(
+                        Color("#e0e0e0"),
+                    ).display(DisplayStyle.Flex)
+                    .alignItems(AlignItems.Center)
+                    .justifyContent(JustifyContent.Center)
+                    .fontSize(64.px)
+                    .styleModifier { property("animation", "bounce 2s infinite") }
+                    .toAttrs(),
         ) {
-            Text("🦍")
+            Image(
+                image,
+                alt = "Image",
+                modifier =
+                    Modifier.fillMaxSize().objectFit(ObjectFit.Contain).styleModifier {
+                        property("object-position", "center")
+                    },
+            )
         }
         Div(
             attrs =
@@ -394,9 +365,8 @@ private fun ImageCard(caption: String) {
                     .padding(15.px)
                     .fontSize(13.px)
                     .color(Color("#555555"))
-                    .styleModifier {
-                        property("text-align", "center")
-                    }.toAttrs(),
+                    .textAlign(TextAlign.Center)
+                    .toAttrs(),
         ) {
             Text(caption)
         }

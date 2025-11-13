@@ -14,7 +14,7 @@ A fully interactive, animated research poster built with Kobweb (Kotlin/JS) show
 ### 📊 **Data Visualizations**
 - **4 Interactive Pie Charts** with hover highlighting and locked content
 - **3 Interactive Bar Charts** with dynamic scaling and value reveals
-- **2 Interactive Data Tables** with multi-dimensional highlighting
+- **2 Interactive Data Tables** with multidimensional highlighting
 - **Animated transitions** on all data elements
 
 ### 🎨 **Rich Animations**
