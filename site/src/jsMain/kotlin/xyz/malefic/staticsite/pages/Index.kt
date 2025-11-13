@@ -1,11 +1,14 @@
 package xyz.malefic.staticsite.pages
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextAlign
-import com.varabyte.kobweb.compose.css.fontWeight
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -18,38 +21,37 @@ import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.flexDirection
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
+import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
+import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.id
 import com.varabyte.kobweb.compose.ui.modifiers.justifyContent
+import com.varabyte.kobweb.compose.ui.modifiers.lineHeight
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.textAlign
-import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.graphics.Image
 import org.jetbrains.compose.web.css.AlignItems
-import org.jetbrains.compose.web.css.AnimationTimingFunction
+import org.jetbrains.compose.web.css.CSSSizeValue
+import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
+import org.jetbrains.compose.web.css.FlexDirection
 import org.jetbrains.compose.web.css.JustifyContent
 import org.jetbrains.compose.web.css.backgroundColor
-import org.jetbrains.compose.web.css.color
-import org.jetbrains.compose.web.css.fontSize
-import org.jetbrains.compose.web.css.lineHeight
 import org.jetbrains.compose.web.css.margin
-import org.jetbrains.compose.web.css.marginBottom
-import org.jetbrains.compose.web.css.marginTop
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.rgba
-import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.B
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
@@ -73,10 +75,12 @@ import xyz.malefic.staticsite.components.SideMenu
 @Page
 @Composable
 fun HomePage() {
+    var isMenuOpen by remember { mutableStateOf(true) }
+
     Style {
         "body" style {
             backgroundColor(Color("#f0f4f8"))
-            property("margin", "0")
+            margin(0.px)
             property("padding", "0")
             property("font-family", "Arial, sans-serif")
         }
@@ -97,14 +101,16 @@ fun HomePage() {
                 MenuSection("conclusion", "Conclusion", "🎯"),
                 MenuSection("references", "References", "📚"),
             ),
+        onToggle = { isMenuOpen = it },
     )
 
     Box(
         Modifier
             .fillMaxSize()
+            .overflow(Overflow.Auto)
+            .padding(left = if (isMenuOpen) 270.px else 0.px)
             .styleModifier {
-                property("overflow", "auto")
-                property("padding-left", "300px")
+                property("transition", "padding-left 0.3s ease-in-out")
             },
     ) {
         Column(
@@ -112,9 +118,12 @@ fun HomePage() {
                 Modifier
                     .fillMaxWidth()
                     .maxWidth(1400.px)
-                    .styleModifier {
-                        property("margin", "0 auto")
-                    }.padding(40.px, 20.px),
+                    .margin(
+                        topBottom = 0.px,
+                        leftRight =
+                            org.jetbrains.compose.web.css
+                                .CSSKeywordValue("auto") as CSSSizeValue<CSSUnit.px>,
+                    ).padding(40.px, 20.px),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AnimatedSection {
@@ -192,27 +201,25 @@ private fun Header() {
                 .toAttrs(),
     ) {
         H1(
-            attrs = {
-                style {
-                    color(Color("#ffffff"))
-                    fontSize(48.px)
-                    fontWeight(FontWeight.Bold)
-                    margin(0.px)
-                    marginBottom(10.px)
-                }
-            },
+            attrs =
+                Modifier
+                    .color(Color("#ffffff"))
+                    .fontSize(48.px)
+                    .fontWeight(FontWeight.Bold)
+                    .margin(0.px)
+                    .margin(bottom = 10.px)
+                    .toAttrs(),
         ) {
             Text("White-Handed Gibbon Activity in Captivity")
         }
         H2(
-            attrs = {
-                style {
-                    color(Color("#ecf0f1"))
-                    fontSize(24.px)
-                    property("font-weight", "normal")
-                    margin(0.px)
-                }
-            },
+            attrs =
+                Modifier
+                    .color(Color("#ecf0f1"))
+                    .fontSize(24.px)
+                    .fontWeight(FontWeight.Normal)
+                    .margin(0.px)
+                    .toAttrs(),
         ) {
             Text("A Behavioral Study at Santa Ana Zoo")
         }
@@ -235,13 +242,12 @@ private fun Authors() {
                 .toAttrs(),
     ) {
         H3(
-            attrs = {
-                style {
-                    fontSize(18.px)
-                    color(Color("#34495e"))
-                    margin(10.px, 0.px)
-                }
-            },
+            attrs =
+                Modifier
+                    .fontSize(18.px)
+                    .color(Color("#34495e"))
+                    .margin(topBottom = 10.px, leftRight = 0.px)
+                    .toAttrs(),
         ) {
             Text("Om Gupta, Esther Li, Alfredo Magallon, Cindy Nguyen")
         }
@@ -250,25 +256,27 @@ private fun Authors() {
 
 @Composable
 private fun IntroductionContent() {
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
+    ) {
         Text(
             "White-handed gibbons in captivity, such as in zoos, will not have the same experiences and freedoms as their wild counterparts. While well-intentioned zoos attempt to bridge this gap, it often leads to different, even detrimental, behaviors in captive animals compared to in the wild. This first-semester capstone project will focus on how the activity budget of white-handed gibbons in captivity (SA ZOO) compares to that of those in the wild.",
         )
     }
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            lineHeight("1.6")
-            color(Color("#2c3e50"))
-            marginTop(15.px)
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .margin(top = 15.px)
+                .toAttrs(),
+    ) {
         I { Text("Hypothesis: ") }
         Text(
             "White-handed gibbons in captivity will show less activity and less varied behavior than their wild counterparts.",
@@ -278,13 +286,14 @@ private fun IntroductionContent() {
 
 @Composable
 private fun MethodologyContent() {
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            lineHeight("1.6")
-            color(Color("#2c3e50"))
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
+    ) {
         Text(
             "Before collecting data, the team conducted online research to understand and compare the typical wild behaviors and typical zoo behaviors of white-handed gibbons. Then, going to the Santa Ana Zoo to observe their two white-handed gibbons, the team conducted two types of observation: scan sampling and focal sampling. Two members chose scan sampling over one-minute intervals and two members chose focal sampling for one of the two white-handed gibbons. One observation was conducted in the morning after 11 a.m., the second in the afternoon after 1 p.m.",
         )
@@ -301,8 +310,8 @@ private fun GibbonImages() {
                 .display(DisplayStyle.Grid)
                 .styleModifier {
                     property("grid-template-columns", "repeat(auto-fit, minmax(250px, 1fr))")
-                    property("gap", "20px")
-                }.toAttrs(),
+                }.gap(20.px)
+                .toAttrs(),
     ) {
         ImageCard("Dark-colored Gibbon (M1)", "/images/dark_gibbon.png")
         ImageCard("Light-colord Gibbon (M2)", "/images/light_gibbon.png")
@@ -321,10 +330,8 @@ private fun ImageCard(
             Modifier
                 .borderRadius(10.px)
                 .overflow(Overflow.Hidden)
-                .transition {
-                    property("transform")
-                    duration(0.3.s)
-                    timingFunction(AnimationTimingFunction.Ease)
+                .styleModifier {
+                    property("transition", "transform 0.3s ease")
                 }.boxShadow(0.px, 4.px, 12.px, 0.px, rgba(0, 0, 0, 0.1))
                 .background(Color("#ffffff"))
                 .toAttrs {
@@ -376,13 +383,12 @@ private fun ImageCard(
 @Composable
 private fun DataVisualization() {
     H3(
-        attrs = {
-            style {
-                fontSize(22.px)
-                marginBottom(20.px)
-                color(Color("#2c3e50"))
-            }
-        },
+        attrs =
+            Modifier
+                .fontSize(22.px)
+                .margin(bottom = 20.px)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
     ) {
         Text("Vocalization Analysis")
     }
@@ -395,8 +401,8 @@ private fun DataVisualization() {
                 .display(DisplayStyle.Grid)
                 .styleModifier {
                     property("grid-template-columns", "repeat(auto-fit, minmax(350px, 1fr))")
-                    property("gap", "25px")
-                }.toAttrs(),
+                }.gap(25.px)
+                .toAttrs(),
     ) {
         InteractivePieChart(
             title = "Vocalization Types Distribution",
@@ -451,14 +457,13 @@ private fun DataVisualization() {
     }
 
     H3(
-        attrs = {
-            style {
-                fontSize(22.px)
-                marginTop(40.px)
-                marginBottom(20.px)
-                color(Color("#2c3e50"))
-            }
-        },
+        attrs =
+            Modifier
+                .fontSize(22.px)
+                .margin(top = 40.px)
+                .margin(bottom = 20.px)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
     ) {
         Text("Temporal and Frequency Patterns")
     }
@@ -469,10 +474,9 @@ private fun DataVisualization() {
                 .fillMaxWidth()
                 .margin(bottom = 40.px)
                 .display(DisplayStyle.Flex)
-                .styleModifier {
-                    property("flex-direction", "column")
-                    property("gap", "25px")
-                }.toAttrs(),
+                .flexDirection(FlexDirection.Column)
+                .gap(25.px)
+                .toAttrs(),
     ) {
         InteractiveBarChart(
             title = "Average Daily Vocalizations by Month",
@@ -519,14 +523,13 @@ private fun DataVisualization() {
     }
 
     H3(
-        attrs = {
-            style {
-                fontSize(22.px)
-                marginTop(40.px)
-                marginBottom(20.px)
-                color(Color("#2c3e50"))
-            }
-        },
+        attrs =
+            Modifier
+                .fontSize(22.px)
+                .margin(top = 40.px)
+                .margin(bottom = 20.px)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
     ) {
         Text("Detailed Data Tables")
     }
@@ -535,11 +538,10 @@ private fun DataVisualization() {
         attrs =
             Modifier
                 .fillMaxWidth()
-                .styleModifier {
-                    property("display", "flex")
-                    property("flex-direction", "column")
-                    property("gap", "25px")
-                }.toAttrs(),
+                .display(DisplayStyle.Flex)
+                .flexDirection(FlexDirection.Column)
+                .gap(25.px)
+                .toAttrs(),
     ) {
         InteractiveDataTable(
             title = "Acoustic Parameters by Vocalization Type",
@@ -573,13 +575,14 @@ private fun DataVisualization() {
 
 @Composable
 private fun ResultsContent() {
-    Ul(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.8")
-            color(Color("#2c3e50"))
-        }
-    }) {
+    Ul(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.8)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
+    ) {
         Li { Text("Morning vocalization peak: 68% of all calls occurred between 6-10 AM, coinciding with natural dawn chorus behavior") }
         Li { Text("Great calls and duets comprised 60% of total vocalizations, indicating strong pair bonding") }
         Li { Text("Significant increase in calling frequency during spring months (March-April), potentially related to breeding season") }
@@ -591,13 +594,14 @@ private fun ResultsContent() {
 
 @Composable
 private fun AnalysisContent() {
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
+    ) {
         Text(
             "The vocal patterns observed in this captive lar gibbon family closely mirror behaviors documented in wild populations, suggesting successful welfare conditions. ",
         )
@@ -605,14 +609,15 @@ private fun AnalysisContent() {
             "The pronounced morning calling peak aligns with territorial advertisement behaviors seen in natural habitats, despite the absence of competing groups.",
         )
     }
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-            marginTop(15.px)
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .margin(top = 15.px)
+                .toAttrs(),
+    ) {
         Text(
             "The high frequency of duetting behavior (25% of vocalizations) indicates strong pair bonding between the adult male and female. ",
         )
@@ -620,14 +625,15 @@ private fun AnalysisContent() {
             "This is a positive welfare indicator, as duets serve both social bonding and territorial functions. The seasonal increase in vocalizations during spring suggests that circannual rhythms remain intact despite captive conditions.",
         )
     }
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-            marginTop(15.px)
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .margin(top = 15.px)
+                .toAttrs(),
+    ) {
         Text("The gradual increase in juvenile participation demonstrates active vocal learning, a critical aspect of gibbon development. ")
         Text(
             "This finding has implications for captive breeding programs and reintroduction efforts, as it confirms that social learning can occur in zoo environments when family groups are maintained.",
@@ -637,13 +643,14 @@ private fun AnalysisContent() {
 
 @Composable
 private fun ConclusionContent() {
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
+    ) {
         Text(
             "This study provides comprehensive documentation of vocal communication patterns in captive lar gibbons, demonstrating that many natural behaviors persist in well-managed zoo environments. ",
         )
@@ -651,28 +658,30 @@ private fun ConclusionContent() {
             "The maintenance of species-typical calling patterns, strong pair bonding, and successful intergenerational vocal transmission suggest excellent welfare conditions.",
         )
     }
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-            marginTop(15.px)
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .margin(top = 15.px)
+                .toAttrs(),
+    ) {
         B { Text("Implications: ") }
         Text("These findings support the use of vocal behavior as a non-invasive welfare assessment tool in captive gibbon populations. ")
         Text(
             "The data can inform enclosure design, visitor management strategies, and enrichment programs for lar gibbons in zoological settings.",
         )
     }
-    P(attrs = {
-        style {
-            fontSize(16.px)
-            property("line-height", "1.6")
-            color(Color("#2c3e50"))
-            marginTop(15.px)
-        }
-    }) {
+    P(
+        attrs =
+            Modifier
+                .fontSize(16.px)
+                .lineHeight(1.6)
+                .color(Color("#2c3e50"))
+                .margin(top = 15.px)
+                .toAttrs(),
+    ) {
         B { Text("Future Research: ") }
         Text(
             "Longitudinal studies tracking vocal development in offspring and comparative analyses across different captive facilities would provide valuable insights into optimizing gibbon husbandry practices.",
@@ -682,13 +691,14 @@ private fun ConclusionContent() {
 
 @Composable
 private fun ReferencesContent() {
-    Ol(attrs = {
-        style {
-            fontSize(14.px)
-            property("line-height", "1.8")
-            color(Color("#2c3e50"))
-        }
-    }) {
+    Ol(
+        attrs =
+            Modifier
+                .fontSize(14.px)
+                .lineHeight(1.8)
+                .color(Color("#2c3e50"))
+                .toAttrs(),
+    ) {
         Li { Text("Geissmann, T. (2002). Duet-splitting and the evolution of gibbon songs. Biological Reviews, 77(1), 57-76.") }
         Li {
             Text(
