@@ -543,29 +543,12 @@ private fun DataVisualization() {
                 .toAttrs(),
     ) {
         InteractiveDataTable(
-            title = "Acoustic Parameters by Vocalization Type",
-            headers = listOf("Call Type", "Frequency (Hz)", "Duration (s)", "Intensity (dB)", "Sample Size"),
+            title = "Mean Percentages (as decimals) out of Total Daily Activity of Lar Gibbons",
+            headers = listOf("      ", "Locomotion/Movement", "Resting", "Feeding"),
             rows =
                 listOf(
-                    listOf("Great Call", "1200-2400", "18.5 ± 3.2", "85 ± 5", "142"),
-                    listOf("Duet", "800-2200", "25.3 ± 4.1", "82 ± 4", "98"),
-                    listOf("Alarm Call", "2000-3500", "3.2 ± 0.8", "90 ± 6", "67"),
-                    listOf("Contact Call", "1500-2000", "2.8 ± 0.6", "75 ± 3", "156"),
-                    listOf("Submissive", "600-1200", "5.1 ± 1.2", "70 ± 4", "34"),
-                ),
-        )
-
-        InteractiveDataTable(
-            title = "Social Context of Vocalizations",
-            headers = listOf("Context", "Total Calls", "% of Total", "Avg Duration", "Primary Caller"),
-            rows =
-                listOf(
-                    listOf("Territory Defense", "89", "22.5%", "19.2s", "Adult Male"),
-                    listOf("Mate Bonding", "76", "19.2%", "26.1s", "Both Adults"),
-                    listOf("Infant Care", "45", "11.4%", "8.3s", "Adult Female"),
-                    listOf("Food Related", "112", "28.3%", "4.5s", "All Members"),
-                    listOf("Alarm Response", "67", "16.9%", "3.1s", "Adult Male"),
-                    listOf("Play Behavior", "7", "1.7%", "5.8s", "Juveniles"),
+                    listOf("Captivity", "0.279 ± 0.052", "0.509 ± 0.041", "0.217 ± 0.033"),
+                    listOf("Wild", "0.307 ± 0.067", "0.356 ± 0.054", "0.338 ± 0.012"),
                 ),
             doubleClickToReveal = false,
         )
