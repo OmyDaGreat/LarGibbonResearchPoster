@@ -66,7 +66,8 @@ import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.dom.Ul
 import xyz.malefic.staticsite.components.AnimatedSection
 import xyz.malefic.staticsite.components.CollapsibleSection
-import xyz.malefic.staticsite.components.InteractiveBarChart
+import xyz.malefic.staticsite.components.ComparisonBarChart
+import xyz.malefic.staticsite.components.ComparisonData
 import xyz.malefic.staticsite.components.InteractiveDataTable
 import xyz.malefic.staticsite.components.InteractivePieChart
 import xyz.malefic.staticsite.components.MenuSection
@@ -468,7 +469,7 @@ private fun DataVisualization() {
                 .color(Color("#2c3e50"))
                 .toAttrs(),
     ) {
-        Text("Temporal and Frequency Patterns")
+        Text("Mean Percentage out of Total Daily Activity")
     }
 
     Div(
@@ -481,47 +482,14 @@ private fun DataVisualization() {
                 .gap(25.px)
                 .toAttrs(),
     ) {
-        InteractiveBarChart(
-            title = "Average Daily Vocalizations by Month",
+        ComparisonBarChart(
+            title = "Mean Percentage out of Total Daily Activity",
             data =
                 listOf(
-                    "Jan" to 45.0,
-                    "Feb" to 52.0,
-                    "Mar" to 58.0,
-                    "Apr" to 63.0,
-                    "May" to 61.0,
-                    "Jun" to 55.0,
+                    ComparisonData("Locomotion/Movement", wildMean = 0.307, wildSEM = 0.067, captivityMean = 0.279, captivitySEM = 0.052),
+                    ComparisonData("Resting", wildMean = 0.356, wildSEM = 0.054, captivityMean = 0.5085, captivitySEM = 0.041),
+                    ComparisonData("Feeding", wildMean = 0.338, wildSEM = 0.012, captivityMean = 0.21675, captivitySEM = 0.033),
                 ),
-            color = "#3498db",
-        )
-
-        InteractiveBarChart(
-            title = "Vocalization Duration (seconds) by Type",
-            data =
-                listOf(
-                    "Great Call" to 18.5,
-                    "Duet" to 25.3,
-                    "Alarm" to 3.2,
-                    "Contact" to 2.8,
-                    "Other" to 5.1,
-                ),
-            color = "#e74c3c",
-            clickToReveal = false,
-        )
-
-        InteractiveBarChart(
-            title = "Weekly Calling Frequency Pattern",
-            data =
-                listOf(
-                    "Mon" to 48.0,
-                    "Tue" to 53.0,
-                    "Wed" to 51.0,
-                    "Thu" to 55.0,
-                    "Fri" to 62.0,
-                    "Sat" to 68.0,
-                    "Sun" to 59.0,
-                ),
-            color = "#2ecc71",
         )
     }
 
