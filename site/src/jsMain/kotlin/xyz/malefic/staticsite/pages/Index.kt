@@ -388,7 +388,7 @@ private fun DataVisualization() {
                 .color(Color("#2c3e50"))
                 .toAttrs(),
     ) {
-        Text("Vocalization Analysis")
+        Text("Pie Chart Analysis")
     }
 
     Div(
@@ -403,54 +403,59 @@ private fun DataVisualization() {
                 .toAttrs(),
     ) {
         InteractivePieChart(
-            title = "Vocalization Types Distribution",
+            title = "M1 Activity Budget (Scan)",
             data =
                 listOf(
-                    "Great Calls" to 35.0,
-                    "Duets" to 25.0,
-                    "Alarm Calls" to 15.0,
-                    "Contact Calls" to 20.0,
-                    "Other" to 5.0,
+                    "Relaxing" to 39.4,
+                    "Eating" to 18.2,
+                    "Hanging" to 15.2,
+                    "Playing with Plants" to 12.1,
+                    "Brachiation" to 6.1,
+                    "Walking" to 6.1,
+                    "Climbing" to 3.0,
                 ),
-            colors = listOf("#e74c3c", "#3498db", "#f39c12", "#2ecc71", "#9b59b6"),
         )
 
         InteractivePieChart(
-            title = "Time of Day Distribution",
+            title = "M1 Activity Budget (Focal)",
             data =
                 listOf(
-                    "Morning (6-10 AM)" to 45.0,
-                    "Midday (10 AM-2 PM)" to 20.0,
-                    "Afternoon (2-6 PM)" to 25.0,
-                    "Evening (6-8 PM)" to 10.0,
+                    "Relaxing" to 37.5,
+                    "Walking" to 21.4,
+                    "Eating" to 21.4,
+                    "Climbing" to 7.1,
+                    "Brachiation" to 5.4,
+                    "Hanging" to 5.4,
+                    "Playing with Plants" to 1.8,
                 ),
-            colors = listOf("#f39c12", "#e67e22", "#d35400", "#c0392b"),
-            hidden = false,
         )
 
         InteractivePieChart(
-            title = "Caller Identity",
+            title = "M2 Activity Budget (Scan)",
             data =
                 listOf(
-                    "Adult Male" to 40.0,
-                    "Adult Female" to 35.0,
-                    "Juvenile 1" to 15.0,
-                    "Juvenile 2" to 10.0,
+                    "Hanging" to 36.4,
+                    "Relaxing" to 24.2,
+                    "Climbing" to 12.1,
+                    "Playing with Plants" to 12.1,
+                    "Brachiation" to 9.1,
+                    "Walking" to 3.0,
+                    "Eating" to 3.0,
                 ),
-            colors = listOf("#3498db", "#e74c3c", "#2ecc71", "#9b59b6"),
         )
 
         InteractivePieChart(
-            title = "Environmental Context",
+            title = "M2 Activity Budget (Focal)",
             data =
                 listOf(
-                    "Pre-feeding" to 30.0,
-                    "Visitor Presence" to 25.0,
-                    "Weather Changes" to 15.0,
-                    "Spontaneous" to 30.0,
+                    "Hanging" to 23.6,
+                    "Relaxing" to 20.0,
+                    "Brachiation" to 18.2,
+                    "Eating" to 14.5,
+                    "Walking" to 10.9,
+                    "Climbing" to 9.1,
+                    "Playing with Plants" to 3.6,
                 ),
-            colors = listOf("#16a085", "#27ae60", "#2980b9", "#8e44ad"),
-            hidden = false,
         )
     }
 

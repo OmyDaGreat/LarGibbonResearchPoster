@@ -37,12 +37,12 @@ import org.w3c.dom.HTMLElement
 fun InteractivePieChart(
     title: String,
     data: List<Pair<String, Double>>,
-    colors: List<String>,
     modifier: Modifier = Modifier,
     hidden: Boolean = false,
 ) {
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
     var isRevealed by remember { mutableStateOf(!hidden) }
+    val colors = remember(data.size) { generateDistinctColors(data.size) }
 
     Div(
         attrs =
@@ -230,7 +230,8 @@ private fun PieSliceWithTooltip(
                         property("animation", "fadeIn 0.2s ease-in")
                     }.toAttrs(),
         ) {
-            Text("$label\n${percentage.toInt()}%")
+            val roundedPercentage = (percentage * 10).toInt() / 10.0
+            Text("$label\n$roundedPercentage%")
         }
     }
 }
@@ -263,4 +264,49 @@ private fun hexToRgb(hex: String): String {
     val g = cleanHex.substring(2, 4).toInt(16)
     val b = cleanHex.substring(4, 6).toInt(16)
     return "$r, $g, $b"
+}
+
+private fun generateDistinctColors(count: Int): List<String> {
+    if (count == 0) return emptyList()
+    
+    // Use HSL color space to generate visually distinct colors
+    // Distribute hues evenly around the color wheel
+    val colors = mutableListOf<String>()
+    val goldenRatioConjugate = 0.618033988749895
+    var hue = kotlin.random.Random.nextDouble() // Start with random hue
+    
+    for (i in 0 until count) {
+        // Use golden ratio to space colors apart
+        hue += goldenRatioConjugate
+        hue %= 1.0
+        
+        // Vary saturation and lightness slightly for additional distinction
+        val saturation = 0.65 + (i % 3) * 0.1 // 65%, 75%, 85%
+        val lightness = 0.5 + (i % 2) * 0.1 // 50%, 60%
+        
+        colors.add(hslToHex(hue, saturation, lightness))
+    }
+    
+    return colors
+}
+
+private fun hslToHex(h: Double, s: Double, l: Double): String {
+    val c = (1 - kotlin.math.abs(2 * l - 1)) * s
+    val x = c * (1 - kotlin.math.abs(((h * 6) % 2) - 1))
+    val m = l - c / 2
+    
+    val (r1, g1, b1) = when ((h * 6).toInt()) {
+        0 -> Triple(c, x, 0.0)
+        1 -> Triple(x, c, 0.0)
+        2 -> Triple(0.0, c, x)
+        3 -> Triple(0.0, x, c)
+        4 -> Triple(x, 0.0, c)
+        else -> Triple(c, 0.0, x)
+    }
+    
+    val r = ((r1 + m) * 255).toInt().coerceIn(0, 255)
+    val g = ((g1 + m) * 255).toInt().coerceIn(0, 255)
+    val b = ((b1 + m) * 255).toInt().coerceIn(0, 255)
+    
+    return "#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}"
 }
