@@ -53,7 +53,6 @@ import org.jetbrains.compose.web.css.margin
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.rgba
-import org.jetbrains.compose.web.dom.B
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.H2
@@ -634,39 +633,7 @@ private fun ConclusionContent() {
                 .toAttrs(),
     ) {
         Text(
-            "This study provides comprehensive documentation of vocal communication patterns in captive lar gibbons, demonstrating that many natural behaviors persist in well-managed zoo environments. ",
-        )
-        Text(
-            "The maintenance of species-typical calling patterns, strong pair bonding, and successful intergenerational vocal transmission suggest excellent welfare conditions.",
-        )
-    }
-    P(
-        attrs =
-            Modifier
-                .fontSize(16.px)
-                .lineHeight(1.6)
-                .color(Color("#2c3e50"))
-                .margin(top = 15.px)
-                .toAttrs(),
-    ) {
-        B { Text("Implications: ") }
-        Text("These findings support the use of vocal behavior as a non-invasive welfare assessment tool in captive gibbon populations. ")
-        Text(
-            "The data can inform enclosure design, visitor management strategies, and enrichment programs for lar gibbons in zoological settings.",
-        )
-    }
-    P(
-        attrs =
-            Modifier
-                .fontSize(16.px)
-                .lineHeight(1.6)
-                .color(Color("#2c3e50"))
-                .margin(top = 15.px)
-                .toAttrs(),
-    ) {
-        B { Text("Future Research: ") }
-        Text(
-            "Longitudinal studies tracking vocal development in offspring and comparative analyses across different captive facilities would provide valuable insights into optimizing gibbon husbandry practices.",
+            "Our hypothesis that gibbons in captivity show less active “activity” is supported by statistically significant difference in resting and feeding. Although there is similar time allocated for movement to monkeys in the wild, it’s important to note that much of the activity dedicated towards locomotion consisted of the stereotypic brachiation, in which monkeys swung repeatedly throughout the perimeter of the enclosure prior to noon. This repetitive behavior + the use of unnatural objects for enrichment (i.e. metal boxes, ropes) show how lack of complexity in environment + limited space can cause abnormal behavior. Stereotypies like these often indicate stress + frustration from the environ. constraints of poor welfare, CNS dysfunction. Although captive Lar gibbons still move in species-typical ways, the variety and purpose of these movements are reduced, emphasizing the need for more enriched habitats that promote natural foraging and movement to improve their well-being.",
         )
     }
 }
