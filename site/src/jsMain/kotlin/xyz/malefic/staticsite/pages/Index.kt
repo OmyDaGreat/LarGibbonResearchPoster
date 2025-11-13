@@ -556,7 +556,7 @@ private fun DataVisualization() {
 
 @Composable
 private fun ResultsContent() {
-    Ul(
+    Div(
         attrs =
             Modifier
                 .fontSize(16.px)
@@ -564,12 +564,46 @@ private fun ResultsContent() {
                 .color(Color("#2c3e50"))
                 .toAttrs(),
     ) {
-        Li { Text("Morning vocalization peak: 68% of all calls occurred between 6-10 AM, coinciding with natural dawn chorus behavior") }
-        Li { Text("Great calls and duets comprised 60% of total vocalizations, indicating strong pair bonding") }
-        Li { Text("Significant increase in calling frequency during spring months (March-April), potentially related to breeding season") }
-        Li { Text("Adult male produced 40% of vocalizations, establishing territorial presence") }
-        Li { Text("Visitor presence correlated with 25% of vocal events, suggesting environmental sensitivity") }
-        Li { Text("Juvenile participation in duets increased by 120% over the study period, showing vocal learning") }
+        Div(
+            attrs =
+                Modifier
+                    .display(DisplayStyle.Flex)
+                    .flexDirection(FlexDirection.Column)
+                    .gap(0.px)
+                    .toAttrs(),
+        ) {
+            val rows =
+                listOf(
+                    Triple("Locomotion/movement:", "brachiation, climbing, walking", Color("#f9fafb")),
+                    Triple("Feeding:", "eating", Color("#ffffff")),
+                    Triple("Resting:", "hanging, relaxing, playing with plants", Color("#f9fafb")),
+                )
+
+            rows.forEachIndexed { index, (label, value, bg) ->
+                Div(
+                    attrs =
+                        Modifier
+                            .display(DisplayStyle.Grid)
+                            .styleModifier {
+                                property("grid-template-columns", "max-content 1fr")
+                                property("padding", "10px 12px")
+                                property("align-items", "center")
+                                property("border-bottom", if (index < rows.lastIndex) "1px solid #e5e7eb" else "none")
+                            }.background(bg)
+                            .toAttrs(),
+                ) {
+                    Div(attrs = Modifier.fontWeight(FontWeight.Bold).margin(right = 12.px).toAttrs()) { Text(label) }
+                    Div { Text(value) }
+                }
+            }
+        }
+
+        Ul {
+            Li { Text("Most time was allocated towards “resting” activities for monkeys in captivity (.509 + .041)") }
+            Li { Text("The least amt. of time was allocated towards feeding (.217 + .033)") }
+            Li { Text("CIs overlap for monkeys in captivity vs. wild for location/movement") }
+            Li { Text("Statistical significance: Monkeys rest more in captivity, but feed less") }
+        }
     }
 }
 
@@ -581,13 +615,11 @@ private fun AnalysisContent() {
                 .fontSize(16.px)
                 .lineHeight(1.6)
                 .color(Color("#2c3e50"))
+                .margin(top = 15.px)
                 .toAttrs(),
     ) {
         Text(
-            "The vocal patterns observed in this captive lar gibbon family closely mirror behaviors documented in wild populations, suggesting successful welfare conditions. ",
-        )
-        Text(
-            "The pronounced morning calling peak aligns with territorial advertisement behaviors seen in natural habitats, despite the absence of competing groups.",
+            "There is overlap in the 95% confidence intervals for the locomotion/movement of the monkeys, indicating that there is no statistically significant difference between the physical activity of the lar gibbons in captivity vs. in the wild. However, there is a statistically significant difference in the amount of daily activity allocated towards feeding and resting for monekys in captivity vs. monkeys in the wild, with the former feeding less and resting more than the latter. In captivity, food is typically provided in a predictable way (e.g., delivered by keepers, stored in one part of the enclosure) which reduces the need for active foraging (less effort required to find food). Captive enclosures may restrict locomotion, reduce opportunities to move between widely spaced trees or search for food. As a result, rest replaces the time dedicated to foraging (White, 2019), as the environment removes the need for vigilance when diet is much more variable in the wild.",
         )
     }
     P(
@@ -599,26 +631,13 @@ private fun AnalysisContent() {
                 .margin(top = 15.px)
                 .toAttrs(),
     ) {
-        Text(
-            "The high frequency of duetting behavior (25% of vocalizations) indicates strong pair bonding between the adult male and female. ",
-        )
-        Text(
-            "This is a positive welfare indicator, as duets serve both social bonding and territorial functions. The seasonal increase in vocalizations during spring suggests that circannual rhythms remain intact despite captive conditions.",
-        )
-    }
-    P(
-        attrs =
-            Modifier
-                .fontSize(16.px)
-                .lineHeight(1.6)
-                .color(Color("#2c3e50"))
-                .margin(top = 15.px)
-                .toAttrs(),
-    ) {
-        Text("The gradual increase in juvenile participation demonstrates active vocal learning, a critical aspect of gibbon development. ")
-        Text(
-            "This finding has implications for captive breeding programs and reintroduction efforts, as it confirms that social learning can occur in zoo environments when family groups are maintained.",
-        )
+        Ul {
+            Li {
+                Text(
+                    "More enrichment = more foraging behavior (Gronqvist et al., 2013).",
+                )
+            }
+        }
     }
 }
 
